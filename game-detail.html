@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>奇幻冒险世界 - 游戏详情 - WeGame</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+    <style>
+        /* 游戏详情页特有样式 */
+        .game-detail-header {
+            margin-top: 64px;
+            background-color: var(--bg-secondary);
+            padding: 40px 0;
+        }
+        
+        .game-hero {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 40px;
+            align-items: start;
+        }
+        
+        .game-cover-large {
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        
+        .game-cover-large img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+        
+        .game-info {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+        }
+        
+        .game-title-large {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+        
+        .game-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 24px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        .game-tags-detail {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+        
+        .game-tag-detail {
+            padding: 4px 12px;
+            background-color: var(--bg-secondary);
+            color: var(--text-secondary);
+            font-size: 12px;
+            border-radius: 12px;
+        }
+        
+        .game-rating-detail {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        
+        .rating-stars-large {
+            color: #ffb800;
+            font-size: 20px;
+        }
+        
+        .rating-info {
+            flex: 1;
+        }
+        
+        .rating-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+        
+        .rating-count {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .game-price-detail {
+            margin-bottom: 24px;
+        }
+        
+        .price-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #ff4d4f;
+            margin-bottom: 8px;
+        }
+        
+        .price-note {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        
+        .btn-large {
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 500;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary-large {
+            background-color: var(--accent-primary);
+            color: white;
+        }
+        
+        .btn-primary-large:hover {
+            background-color: var(--accent-secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
+        }
+        
+        .btn-secondary-large {
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+        
+        .btn-secondary-large:hover {
+            background-color: var(--hover-bg);
+        }
+        
+        .refund-policy {
+            background-color: var(--bg-secondary);
+            padding: 16px;
+            border-radius: 4px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .refund-policy h4 {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+        
+        /* 内容标签栏 */
+        .content-tabs {
+            margin: 40px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .tab-buttons {
+            display: flex;
+            gap: 24px;
+        }
+        
+        .tab-button {
+            padding: 12px 0;
+            background: none;
+            border: none;
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .tab-button:hover,
+        .tab-button.active {
+            color: var(--accent-primary);
+        }
+        
+        .tab-button.active:after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--accent-primary);
+        }
+        
+        /* 内容区域 */
+        .tab-content {
+            margin-top: 30px;
+            min-height: 400px;
+        }
+        
+        .tab-panel {
+            display: none;
+        }
+        
+        .tab-panel.active {
+            display: block;
+        }
+        
+        /* 游戏简介 */
+        .game-description {
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--text-primary);
+            margin-bottom: 24px;
+        }
+        
+        .game-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .feature-card {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+        
+        .feature-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+            color: var(--accent-primary);
+        }
+        
+        .feature-title {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+        
+        .feature-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        /* 配置要求 */
+        .system-requirements {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+        
+        .requirement-card {
+            background-color: var(--card-bg);
+            padding: 24px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+        
+        .requirement-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .requirement-icon {
+            font-size: 24px;
+            color: var(--accent-primary);
+        }
+        
+        .requirement-title {
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        
+        .requirement-list {
+            list-style: none;
+        }
+        
+        .requirement-item {
+            display: flex;
+            margin-bottom: 12px;
+        }
+        
+        .requirement-label {
+            width: 120px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        .requirement-value {
+            flex: 1;
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+        
+        /* 截图/视频 */
+        .media-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .media-item {
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+        }
+        
+        .media-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .media-item img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+        
+        /* 用户评价 */
+        .reviews-section {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 40px;
+        }
+        
+        .rating-distribution {
+            background-color: var(--card-bg);
+            padding: 24px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+        
+        .distribution-title {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+        
+        .rating-bar {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .rating-stars-small {
+            font-size: 14px;
+            color: #ffb800;
+            width: 80px;
+        }
+        
+        .bar-container {
+            flex: 1;
+            height: 8px;
+            background-color: var(--bg-secondary);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 0 12px;
+        }
+        
+        .bar-fill {
+            height: 100%;
+            background-color: #ffb800;
+            border-radius: 4px;
+        }
+        
+        .rating-percentage {
+            font-size: 14px;
+            color: var(--text-secondary);
+            width: 40px;
+            text-align: right;
+        }
+        
+        .review-list {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        
+        .review-item {
+            background-color: var(--card-bg);
+            padding: 24px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+        
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .reviewer-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .reviewer-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+        
+        .reviewer-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .reviewer-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        
+        .review-date {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        
+        .review-rating {
+            color: #ffb800;
+            font-size: 14px;
+        }
+        
+        .review-content {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+        
+        .review-actions {
+            display: flex;
+            gap: 16px;
+        }
+        
+        .review-action {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .review-action:hover {
+            color: var(--accent-primary);
+        }
+        
+        /* 攻略专区 */
+        .guide-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+        
+        .guide-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+        }
+        
+        .guide-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .guide-image {
+            height: 180px;
+            overflow: hidden;
+        }
+        
+        .guide-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .guide-content {
+            padding: 20px;
+        }
+        
+        .guide-title {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+        
+        .guide-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+        
+        .guide-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .game-hero {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            
+            .reviews-section {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            
+            .tab-buttons {
+                overflow-x: auto;
+                padding-bottom: 12px;
+            }
+            
+            .tab-button {
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <header class="navbar">
+        <div class="navbar-container">
+            <!-- 左侧Logo和导航 -->
+            <div class="navbar-left">
+                <div class="logo">
+                    <a href="index.html">WEGAME</a>
+                </div>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="index.html">首页</a></li>
+                        <li><a href="store.html">商店</a></li>
+                        <li><a href="library.html">游戏库</a></li>
+                        <li><a href="live.html">直播</a></li>
+                        <li><a href="community.html">社区</a></li>
+                        <li><a href="#ranking">排行榜</a></li>
+                    </ul>
+                </nav>
+            </div>
+            
+            <!-- 中部搜索框 -->
+            <div class="navbar-center">
+                <div class="search-box">
+                    <input type="text" placeholder="搜索游戏、玩家、社区话题">
+                    <button class="search-btn">搜索</button>
+                </div>
+            </div>
+            
+            <!-- 右侧用户功能 -->
+            <div class="navbar-right">
+                <div class="nav-icon">
+                    <span class="icon notification">🔔</span>
+                </div>
+                <div class="nav-icon">
+                    <span class="icon friends">👥</span>
+                </div>
+                <div class="user-profile">
+                    <div class="user-avatar">
+                        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=user%20avatar%20profile%20picture&image_size=square" alt="用户头像">
+                    </div>
+                    <div class="user-dropdown">
+                        <ul>
+                            <li><a href="#profile">个人主页</a></li>
+                            <li><a href="#assets">我的资产</a></li>
+                            <li><a href="#settings">系统设置</a></li>
+                            <li>
+                                <div class="theme-toggle">
+                                    <span>深色模式</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="theme-toggle">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </li>
+                            <li><a href="#logout">退出登录</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 游戏详情页头部 -->
+    <section class="game-detail-header">
+        <div class="container">
+            <div class="game-hero">
+                <div class="game-cover-large">
+                    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=game%20cover%20action%20rpg%20fantasy%20world&image_size=landscape_16_9" alt="游戏封面">
+                </div>
+                <div class="game-info">
+                    <h1 class="game-title-large">奇幻冒险世界</h1>
+                    <div class="game-meta">
+                        <span>发行商：奇幻游戏工作室</span>
+                        <span>发售日期：2026-01-15</span>
+                        <span>平台：PC, Mac</span>
+                    </div>
+                    <div class="game-tags-detail">
+                        <span class="game-tag-detail">动作RPG</span>
+                        <span class="game-tag-detail">开放世界</span>
+                        <span class="game-tag-detail">奇幻</span>
+                        <span class="game-tag-detail">多人在线</span>
+                    </div>
+                    <div class="game-rating-detail">
+                        <div class="rating-stars-large">★★★★☆</div>
+                        <div class="rating-info">
+                            <div class="rating-value">4.5</div>
+                            <div class="rating-count">12,345 条评价</div>
+                        </div>
+                    </div>
+                    <div class="game-price-detail">
+                        <div class="price-value">¥199</div>
+                        <div class="price-note">原价：¥299，节省 ¥100</div>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn-large btn-primary-large">立即购买</button>
+                        <button class="btn-large btn-secondary-large">加入购物车</button>
+                        <button class="btn-large btn-secondary-large">添加到愿望单</button>
+                    </div>
+                    <div class="refund-policy">
+                        <h4>退款政策</h4>
+                        <p>购买后14天内，游戏时长不超过2小时，可申请自助退款。退款将在3-5个工作日内到账。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 主内容区 -->
+    <main>
+        <div class="container">
+            <!-- 内容标签栏 -->
+            <div class="content-tabs">
+                <div class="tab-buttons">
+                    <button class="tab-button active" data-tab="description">游戏简介</button>
+                    <button class="tab-button" data-tab="requirements">配置要求</button>
+                    <button class="tab-button" data-tab="media">截图/视频</button>
+                    <button class="tab-button" data-tab="reviews">用户评价</button>
+                    <button class="tab-button" data-tab="guides">攻略专区</button>
+                </div>
+            </div>
+
+            <!-- 内容区域 -->
+            <div class="tab-content">
+                <!-- 游戏简介 -->
+                <div class="tab-panel active" id="description">
+                    <div class="game-description">
+                        <p>《奇幻冒险世界》是一款开放世界动作角色扮演游戏，玩家将在一个充满魔法和神秘的奇幻世界中展开冒险。游戏拥有广阔的开放世界地图，玩家可以自由探索各种地形，包括森林、山脉、沙漠、海洋等。</p>
+                        <p>游戏特色包括：</p>
+                        <ul>
+                            <li>自由的角色养成系统，玩家可以根据自己的喜好定制角色的技能和属性</li>
+                            <li>丰富的任务系统，包括主线任务、支线任务和随机事件</li>
+                            <li>多种职业选择，每种职业都有独特的技能和玩法</li>
+                            <li>实时战斗系统，结合了动作游戏的爽快感和RPG的策略性</li>
+                            <li>多人在线功能，玩家可以与朋友一起冒险，组队挑战强大的敌人</li>
+                        </ul>
+                        <p>游戏采用最新的3D引擎开发，拥有精美的画面和流畅的动画效果，为玩家带来身临其境的游戏体验。</p>
+                    </div>
+                    <div class="game-features">
+                        <div class="feature-card">
+                            <div class="feature-icon">🌍</div>
+                            <h3 class="feature-title">开放世界</h3>
+                            <p class="feature-description">探索广阔的奇幻世界，发现隐藏的宝藏和秘密。</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">⚔️</div>
+                            <h3 class="feature-title">实时战斗</h3>
+                            <p class="feature-description">流畅的实时战斗系统，体验刺激的战斗快感。</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">👥</div>
+                            <h3 class="feature-title">多人在线</h3>
+                            <p class="feature-description">与朋友一起组队冒险，挑战强大的敌人。</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">🧙</div>
+                            <h3 class="feature-title">职业系统</h3>
+                            <p class="feature-description">多种职业选择，每种职业都有独特的技能和玩法。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 配置要求 -->
+                <div class="tab-panel" id="requirements">
+                    <div class="system-requirements">
+                        <div class="requirement-card">
+                            <div class="requirement-header">
+                                <div class="requirement-icon">📱</div>
+                                <h3 class="requirement-title">最低配置</h3>
+                            </div>
+                            <ul class="requirement-list">
+                                <li class="requirement-item">
+                                    <span class="requirement-label">操作系统：</span>
+                                    <span class="requirement-value">Windows 10 64位</span>
+                                </li>
+                                <li class="requirement-item">
+                                    <span class="requirement-label">处理器：</span>
+                                    <span class="requirement-value">Intel Core i5-4460 或 AMD FX-6300</span>
+                                </li>
+                                <li class="requirement-item">
+                                    <span class="requirement-label">内存：</span>
+                                    <span class="requirement-value">8 GB RAM</span>
+                                </li>
+                                <li class="requirement-item">
+                                    <span class="requirement-label">显卡：</span>
+                                    <span class="requirement-value">NVIDIA GTX 960 或 AMD R9 280</span>
+                                </li>
+                                <li class="requirement-item">
+                                    <span class="requirement-label">存储空间：</span>
+                                    <span class="requirement-value">50 GB 可用空间</span>
+                                </li>
+                                <li class="requirement-item">
+                                    <span class="requirement-label">网络：</span>
+                                    <span class="requirement-value">宽带互联网连接</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="requirement-card">
+                            <div class="requirement-header">
+                                <div class="requirement-icon">💻</div>
+                                <h3 class="requirement-title">推荐配置</h3>
+                            </div>
+                            <ul class="requirement-list">
+                                <li class="requirement-item">
+                                    <span class="requirement-label">操作系统：</span>
+                                    <span class="requirement-value">Windows 10 64位或 Windows 11</span>
+                                </li>
+                                <li class="requirement-item">
+                                    <span class="requirement-label">处理器：</span>
+                                    <span class="requirement-value">Intel Core i7-8700K 或 AMD Ryzen 7 2700X</span>
+                                </li>
+                                <li class="requirement-item">
+                                    <span class="requirement-label">内存：</span>
+                                    <span class="requirement-value">16 GB RAM</span>
+                                </li>
+                                <li class="requirement-item">
+                                    <span class="requirement-label">显卡：</span>
+                                    <span class="requirement-value">NVIDIA GTX 1080 Ti 或 AMD Radeon RX Vega 64</span>
+                                </li>
+                                <li class="requirement-item">
+                                    <span class="requirement-label">存储空间：</span>
+                                    <span class="requirement-value">50 GB 可用空间（SSD）</span>
+                                </li>
+                                <li class="requirement-item">
+                                    <span class="requirement-label">网络：</span>
+                                    <span class="requirement-value">宽带互联网连接</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 截图/视频 -->
+                <div class="tab-panel" id="media">
+                    <div class="media-gallery">
+                        <div class="media-item">
+                            <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=game%20screenshot%20fantasy%20world%201&image_size=landscape_16_9" alt="游戏截图">
+                        </div>
+                        <div class="media-item">
+                            <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=game%20screenshot%20fantasy%20world%202&image_size=landscape_16_9" alt="游戏截图">
+                        </div>
+                        <div class="media-item">
+                            <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=game%20screenshot%20fantasy%20world%203&image_size=landscape_16_9" alt="游戏截图">
+                        </div>
+                        <div class="media-item">
+                            <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=game%20screenshot%20fantasy%20world%204&image_size=landscape_16_9" alt="游戏截图">
+                        </div>
+                        <div class="media-item">
+                            <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=game%20screenshot%20fantasy%20world%205&image_size=landscape_16_9" alt="游戏截图">
+                        </div>
+                        <div class="media-item">
+                            <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=game%20screenshot%20fantasy%20world%206&image_size=landscape_16_9" alt="游戏截图">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 用户评价 -->
+                <div class="tab-panel" id="reviews">
+                    <div class="reviews-section">
+                        <div class="review-list">
+                            <div class="review-item">
+                                <div class="review-header">
+                                    <div class="reviewer-info">
+                                        <div class="reviewer-avatar">
+                                            <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=user%20avatar%201&image_size=square" alt="用户头像">
+                                        </div>
+                                        <div>
+                                            <div class="reviewer-name">玩家12345</div>
+                                            <div class="review-date">2026-04-20</div>
+                                        </div>
+                                    </div>
+                                    <div class="review-rating">★★★★★</div>
+                                </div>
+                                <div class="review-content">
+                                    这款游戏真的太好玩了！开放世界非常大，内容丰富，画面精美，战斗系统流畅。我已经玩了50多个小时，仍然有很多东西可以探索。强烈推荐给喜欢RPG游戏的玩家！
+                                </div>
+                                <div class="review-actions">
+                                    <div class="review-action">👍 有用 (123)</div>
+                                    <div class="review-action">💬 回复</div>
+                                    <div class="review-action">⭐ 收藏</div>
+                                </div>
+                            </div>
+                            <div class="review-item">
+                                <div class="review-header">
+                                    <div class="reviewer-info">
+                                        <div class="reviewer-avatar">
+                                            <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=user%20avatar%202&image_size=square" alt="用户头像">
+                                        </div>
+                                        <div>
+                                            <div class="reviewer-name">游戏爱好者</div>
+                                            <div class="review-date">2026-04-19</div>
+                                        </div>
+                                    </div>
+                                    <div class="review-rating">★★★★☆</div>
+                                </div>
+                                <div class="review-content">
+                                    游戏整体不错，画面和音效都很棒，但是优化还有待改进，我的RTX 3070在高画质下有时会掉帧。希望后续更新能解决这个问题。
+                                </div>
+                                <div class="review-actions">
+                                    <div class="review-action">👍 有用 (89)</div>
+                                    <div class="review-action">💬 回复</div>
+                                    <div class="review-action">⭐ 收藏</div>
+                                </div>
+                            </div>
+                            <div class="review-item">
+                                <div class="review-header">
+                                    <div class="reviewer-info">
+                                        <div class="reviewer-avatar">
+                                            <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=user%20avatar%203&image_size=square" alt="用户头像">
+                                        </div>
+                                        <div>
+                                            <div class="reviewer-name">奇幻迷</div>
+                                            <div class="review-date">2026-04-18</div>
+                                        </div>
+                                    </div>
+                                    <div class="review-rating">★★★★★</div>
+                                </div>
+                                <div class="review-content">
+                                    作为一个奇幻游戏迷，这款游戏完全符合我的期望。剧情丰富，角色塑造立体，世界设计精美，战斗系统也很有深度。强烈推荐！
+                                </div>
+                                <div class="review-actions">
+                                    <div class="review-action">👍 有用 (156)</div>
+                                    <div class="review-action">💬 回复</div>
+                                    <div class="review-action">⭐ 收藏</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rating-distribution">
+                            <h3 class="distribution-title">评分分布</h3>
+                            <div class="rating-bar">
+                                <div class="rating-stars-small">★★★★★</div>
+                                <div class="bar-container">
+                                    <div class="bar-fill" style="width: 65%"></div>
+                                </div>
+                                <div class="rating-percentage">65%</div>
+                            </div>
+                            <div class="rating-bar">
+                                <div class="rating-stars-small">★★★★☆</div>
+                                <div class="bar-container">
+                                    <div class="bar-fill" style="width: 20%"></div>
+                                </div>
+                                <div class="rating-percentage">20%</div>
+                            </div>
+                            <div class="rating-bar">
+                                <div class="rating-stars-small">★★★☆☆</div>
+                                <div class="bar-container">
+                                    <div class="bar-fill" style="width: 10%"></div>
+                                </div>
+                                <div class="rating-percentage">10%</div>
+                            </div>
+                            <div class="rating-bar">
+                                <div class="rating-stars-small">★★☆☆☆</div>
+                                <div class="bar-container">
+                                    <div class="bar-fill" style="width: 3%"></div>
+                                </div>
+                                <div class="rating-percentage">3%</div>
+                            </div>
+                            <div class="rating-bar">
+                                <div class="rating-stars-small">★☆☆☆☆</div>
+                                <div class="bar-container">
+                                    <div class="bar-fill" style="width: 2%"></div>
+                                </div>
+                                <div class="rating-percentage">2%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 攻略专区 -->
+                <div class="tab-panel" id="guides">
+                    <div class="guide-section">
+                        <div class="guide-card">
+                            <div class="guide-image">
+                                <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=game%20guide%20character%20build&image_size=landscape_4_3" alt="攻略图片">
+                            </div>
+                            <div class="guide-content">
+                                <h3 class="guide-title">职业加点指南</h3>
+                                <p class="guide-description">详细介绍各职业的最佳加点方案，帮助玩家打造强力角色。</p>
+                                <div class="guide-meta">
+                                    <span>作者：攻略大师</span>
+                                    <span>2026-04-15</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="guide-card">
+                            <div class="guide-image">
+                                <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=game%20guide%20quest%20walkthrough&image_size=landscape_4_3" alt="攻略图片">
+                            </div>
+                            <div class="guide-content">
+                                <h3 class="guide-title">主线任务攻略</h3>
+                                <p class="guide-description">完整的主线任务流程攻略，帮助玩家顺利通关游戏。</p>
+                                <div class="guide-meta">
+                                    <span>作者：游戏达人</span>
+                                    <span>2026-04-10</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="guide-card">
+                            <div class="guide-image">
+                                <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=game%20guide%20equipment&image_size=landscape_4_3" alt="攻略图片">
+                            </div>
+                            <div class="guide-content">
+                                <h3 class="guide-title">装备获取指南</h3>
+                                <p class="guide-description">教你如何获取游戏中最强大的装备，提升角色实力。</p>
+                                <div class="guide-meta">
+                                    <span>作者：装备专家</span>
+                                    <span>2026-04-05</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="guide-card">
+                            <div class="guide-image">
+                                <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=game%20guide%20mod%20compatibility&image_size=landscape_4_3" alt="攻略图片">
+                            </div>
+                            <div class="guide-content">
+                                <h3 class="guide-title">Mod兼容清单</h3>
+                                <p class="guide-description">整理了常用Mod的兼容性信息，帮助玩家安全使用Mod。</p>
+                                <div class="guide-meta">
+                                    <span>作者：Mod爱好者</span>
+                                    <span>2026-03-28</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 底部导航区 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-links">
+                <div class="link-group">
+                    <h4>平台介绍</h4>
+                    <ul>
+                        <li><a href="#">关于我们</a></li>
+                        <li><a href="#">加入我们</a></li>
+                        <li><a href="#">商务合作</a></li>
+                        <li><a href="#">媒体报道</a></li>
+                    </ul>
+                </div>
+                <div class="link-group">
+                    <h4>帮助中心</h4>
+                    <ul>
+                        <li><a href="#">常见问题</a></li>
+                        <li><a href="#">账号问题</a></li>
+                        <li><a href="#">技术支持</a></li>
+                        <li><a href="#">游戏指南</a></li>
+                    </ul>
+                </div>
+                <div class="link-group">
+                    <h4>开发者</h4>
+                    <ul>
+                        <li><a href="#">开发者平台</a></li>
+                        <li><a href="#">SDK文档</a></li>
+                        <li><a href="#">接入指南</a></li>
+                        <li><a href="#">成功案例</a></li>
+                    </ul>
+                </div>
+                <div class="link-group">
+                    <h4>法律与政策</h4>
+                    <ul>
+                        <li><a href="#">用户协议</a></li>
+                        <li><a href="#">隐私政策</a></li>
+                        <li><a href="#">退款政策</a></li>
+                        <li><a href="#">知识产权</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 WeGame. 保留所有权利。</p>
+                <div class="social-links">
+                    <a href="#">微博</a>
+                    <a href="#">微信</a>
+                    <a href="#">B站</a>
+                    <a href="#">抖音</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 标签切换功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabPanels = document.querySelectorAll('.tab-panel');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // 移除所有标签的active类
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    // 添加当前标签的active类
+                    this.classList.add('active');
+                    
+                    // 隐藏所有内容面板
+                    tabPanels.forEach(panel => panel.classList.remove('active'));
+                    // 显示当前内容面板
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>社区 - WeGame</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+    <style>
+        /* 社区页面特有样式 */
+        .community-header {
+            padding: 40px 0;
+            background-color: var(--bg-secondary);
+            margin-top: 64px;
+        }
+        
+        .community-header h1 {
+            font-size: 32px;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        
+        .community-header p {
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+        
+        /* 顶部导航与发布区 */
+        .community-nav {
+            background-color: var(--card-bg);
+            box-shadow: var(--shadow);
+            margin: 20px 0;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        
+        .community-tabs {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 16px;
+        }
+        
+        .community-tab {
+            padding: 8px 0;
+            background: none;
+            border: none;
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .community-tab:hover,
+        .community-tab.active {
+            color: var(--accent-primary);
+        }
+        
+        .community-tab.active:after {
+            content: '';
+            position: absolute;
+            bottom: -17px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--accent-primary);
+        }
+        
+        .post-section {
+            background-color: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 20px;
+        }
+        
+        .post-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .post-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+        
+        .post-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .post-input {
+            flex: 1;
+        }
+        
+        .post-textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: var(--card-bg);
+            color: var(--text-primary);
+            font-size: 14px;
+            resize: vertical;
+            transition: all 0.3s ease;
+        }
+        
+        .post-textarea:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+        }
+        
+        .post-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+        }
+        
+        .post-options {
+            display: flex;
+            gap: 16px;
+        }
+        
+        .post-option {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 12px;
+            background-color: var(--card-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .post-option:hover {
+            background-color: var(--hover-bg);
+        }
+        
+        .post-btn {
+            padding: 8px 24px;
+            background-color: var(--accent-primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .post-btn:hover {
+            background-color: var(--accent-secondary);
+        }
+        
+        /* 我的圈子 */
+        .circles-section {
+            margin: 30px 0;
+        }
+        
+        .circles-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .circles-header h3 {
+            font-size: 18px;
+            color: var(--text-primary);
+        }
+        
+        .circles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        
+        .circle-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+        
+        .circle-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+        
+        .circle-cover {
+            height: 120px;
+            overflow: hidden;
+        }
+        
+        .circle-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .circle-info {
+            padding: 16px;
+        }
+        
+        .circle-name {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+        
+        .circle-meta {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+        
+        .circle-btn {
+            width: 100%;
+            padding: 6px;
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .circle-btn:hover {
+            background-color: var(--hover-bg);
+        }
+        
+        /* 主内容区 */
+        .community-content {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        
+        /* 动态信息流 */
+        .feed-section {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        
+        .feed-item {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.3s ease;
+        }
+        
+        .feed-item:hover {
+            background-color: var(--bg-secondary);
+        }
+        
+        .feed-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .feed-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+        
+        .feed-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .feed-user-info {
+            flex: 1;
+        }
+        
+        .feed-username {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+        
+        .feed-time {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        
+        .feed-content {
+            margin-bottom: 16px;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        
+        .feed-media {
+            margin-bottom: 16px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .feed-media img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+        
+        .feed-actions {
+            display: flex;
+            gap: 24px;
+        }
+        
+        .feed-action {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .feed-action:hover {
+            color: var(--accent-primary);
+        }
+        
+        /* 右侧功能面板 */
+        .sidebar {
+            position: sticky;
+            top: 100px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        
+        .sidebar-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            padding: 20px;
+        }
+        
+        .sidebar-card h3 {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+        
+        /* 热门话题 */
+        .trending-topics {
+            list-style: none;
+        }
+        
+        .topic-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .topic-item:hover {
+            color: var(--accent-primary);
+        }
+        
+        .topic-item:last-child {
+            border-bottom: none;
+        }
+        
+        .topic-name {
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+        
+        .topic-count {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        
+        /* 推荐关注 */
+        .recommended-users {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .user-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .user-item-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+        
+        .user-item-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .user-item-info {
+            flex: 1;
+        }
+        
+        .user-item-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+        
+        .user-item-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        
+        .follow-btn {
+            padding: 4px 12px;
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .follow-btn:hover {
+            background-color: var(--accent-primary);
+            color: white;
+            border-color: var(--accent-primary);
+        }
+        
+        /* 正在直播 */
+        .live-preview {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .live-preview-item {
+            display: flex;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .live-preview-item:hover {
+            transform: translateX(5px);
+        }
+        
+        .live-preview-cover {
+            width: 80px;
+            height: 45px;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .live-preview-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .live-preview-badge {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            background-color: #ff4d4f;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 2px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        
+        .live-preview-info {
+            flex: 1;
+        }
+        
+        .live-preview-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            line-height: 1.3;
+        }
+        
+        .live-preview-meta {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1024px) {
+            .community-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                position: static;
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+            
+            .sidebar-card {
+                flex: 1;
+                min-width: 250px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .community-tabs {
+                overflow-x: auto;
+                padding-bottom: 12px;
+            }
+            
+            .community-tab {
+                white-space: nowrap;
+            }
+            
+            .post-actions {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            
+            .post-options {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .post-btn {
+                align-self: flex-end;
+            }
+            
+            .circles-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 12px;
+            }
+            
+            .sidebar {
+                flex-direction: column;
+            }
+            
+            .sidebar-card {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <header class="navbar">
+        <div class="navbar-container">
+            <!-- 左侧Logo和导航 -->
+            <div class="navbar-left">
+                <div class="logo">
+                    <a href="index.html">WEGAME</a>
+                </div>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="index.html">首页</a></li>
+                        <li><a href="store.html">商店</a></li>
+                        <li><a href="library.html">游戏库</a></li>
+                        <li><a href="live.html">直播</a></li>
+                        <li><a href="community.html" class="active">社区</a></li>
+                        <li><a href="#ranking">排行榜</a></li>
+                    </ul>
+                </nav>
+            </div>
+            
+            <!-- 中部搜索框 -->
+            <div class="navbar-center">
+                <div class="search-box">
+                    <input type="text" placeholder="搜索游戏、玩家、社区话题">
+                    <button class="search-btn">搜索</button>
+                </div>
+            </div>
+            
+            <!-- 右侧用户功能 -->
+            <div class="navbar-right">
+                <div class="nav-icon">
+                    <span class="icon notification">🔔</span>
+                </div>
+                <div class="nav-icon">
+                    <span class="icon friends">👥</span>
+                </div>
+                <div class="user-profile">
+                    <div class="user-avatar">
+                        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=user%20avatar%20profile%20picture&image_size=square" alt="用户头像">
+                    </div>
+                    <div class="user-dropdown">
+                        <ul>
+                            <li><a href="#profile">个人主页</a></li>
+                            <li><a href="#assets">我的资产</a></li>
+                            <li><a href="#settings">系统设置</a></li>
+                            <li>
+                                <div class="theme-toggle">
+                                    <span>深色模式</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="theme-toggle">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </li>
+                            <li><a href="#logout">退出登录</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 社区页面头部 -->
+    <section class="community-header">
+        <div class="container">
+            <h1>社区</h1>
+            <p>与其他玩家交流、分享游戏心得</p>
+        </div>
+    </section>
+
+    <!-- 主内容区 -->
+    <main>
+        <div class="container">
+            <!-- 顶部导航与发布区 -->
+            <div class="community-nav">
+                <div class="community-tabs">
+                    <button class="community-tab active">社区首页</button>
+                    <button class="community-tab">动态广场</button>
+                    <button class="community-tab">游戏专区</button>
+                </div>
+                <div class="post-section">
+                    <div class="post-header">
+                        <div class="post-avatar">
+                            <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=user%20avatar%20profile%20picture&image_size=square" alt="用户头像">
+                        </div>
+                        <div class="post-input">
+                            <textarea class="post-textarea" placeholder="分享你的游戏心得、成就或截图..."></textarea>
+                        </div>
+                    </div>
+                    <div class="post-actions">
+                        <div class="post-options">
+                            <button class="post-option">
+                                <span>📷</span>
+                                <span>图片</span>
+                            </button>
+                            <button class="post-option">
+                                <span>🎥</span>
+                                <span>视频</span>
+                            </button>
+                            <button class="post-option">
+                                <span>😊</span>
+                                <span>表情</span>
+                            </button>
+                        </div>
+                        <button class="post-btn">发布</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 我的圈子 -->
+            <div class="circles-section">
+                <div class="circles-header">
+                    <h3>我的圈子</h3>
+                    <a href="#" style="color: var(--accent-primary); font-size: 14px;">查看全部</a>
+                </div>
+                <div class="circles-grid">
+                    <div class="circle-card">
+                        <div class="circle-cover">
+                            <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=game%20community%20cover%201&image_size=landscape_4_3" alt="圈子封面">
+                        </div>
+                        <div class="circle-info">
+                            <h4 class="circle-name">奇幻冒险世界</h4>
+                            <div class="circle-meta">12,345 成员</div>
+                            <button class="circle-btn">进入圈子</button>
+                        </div>
+                    </div>
+                    <div class="circle-card">
+                        <div class="circle-cover">
+                            <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=game%20community%20cover%202&image_size=landscape_4_3" alt="圈子封面">
+                        </div>
+                        <div class="circle-info">
+                            <h4 class="circle-name">星际战场</h4>
+                            <div class="circle-meta">8,765 成员</div>
+                            <button class="circle-btn">进入圈子</button>
+                        </div>
+                    </div>
+                    <div class="circle-card">
+                        <div class="circle-cover">
+                            <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=game%20community%20cover%203&image_size=landscape_4_3" alt="圈子封面">
+                        </div>
+                        <div class="circle-info">
+                            <h4 class="circle-name">二次元冒险</h4>
+                            <div class="circle-meta">15,678 成员</div>
+                            <button class="circle-btn">进入圈子</button>
+                        </div>
+                    </div>
+                    <div class="circle-card">
+                        <div class="circle-cover">
+                            <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=game%20community%20cover%204&image_size=landscape_4_3" alt="圈子封面">
+                        </div>
+                        <div class="circle-info">
+                            <h4 class="circle-name">帝国崛起</h4>
+                            <div class="circle-meta">5,432 成员</div>
+                            <button class="circle-btn">进入圈子</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 社区内容 -->
+            <div class="community-content">
+                <!-- 动态信息流 -->
+                <div class="feed-section">
+                    <!-- 动态项 1 -->
+                    <div class="feed-item">
+                        <div class="feed-header">
+                            <div class="feed-avatar">
+                                <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=user%20avatar%201&image_size=square" alt="用户头像">
+                            </div>
+                            <div class="feed-user-info">
+                                <div class="feed-username">游戏达人</div>
+                                <div class="feed-time">2小时前</div>
+                            </div>
+                        </div>
+                        <div class="feed-content">
+                            今天终于打通了《奇幻冒险世界》的最终 boss！这个游戏的剧情真的太棒了，推荐给所有喜欢 RPG 的玩家！
+                        </div>
+                        <div class="feed-media">
+                            <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=game%20screenshot%20final%20boss&image_size=landscape_4_3" alt="游戏截图">
+                        </div>
+                        <div class="feed-actions">
+                            <div class="feed-action">
+                                <span>👍</span>
+                                <span>128</span>
+                            </div>
+                            <div class="feed-action">
+                                <span>💬</span>
+                                <span>32</span>
+                            </div>
+                            <div class="feed-action">
+                                <span>🔄</span>
+                                <span>15</span>
+                            </div>
+                            <div class="feed-action">
+                                <span>⭐</span>
+                                <span>收藏</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 动态项 2 -->
+                    <div class="feed-item">
+                        <div class="feed-header">
+                            <div class="feed-avatar">
+                                <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=user%20avatar%202&image_size=square" alt="用户头像">
+                            </div>
+                            <div class="feed-user-info">
+                                <div class="feed-username">二次元爱好者</div>
+                                <div class="feed-time">4小时前</div>
+                            </div>
+                        </div>
+                        <div class="feed-content">
+                            《二次元冒险》新角色上线了！这个角色太可爱了，技能也很强大，推荐大家去抽一下！
+                        </div>
+                        <div class="feed-media">
+                            <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=anime%20game%20character&image_size=landscape_4_3" alt="游戏角色">
+                        </div>
+                        <div class="feed-actions">
+                            <div class="feed-action">
+                                <span>👍</span>
+                                <span>256</span>
+                            </div>
+                            <div class="feed-action">
+                                <span>💬</span>
+                                <span>64</span>
+                            </div>
+                            <div class="feed-action">
+                                <span>🔄</span>
+                                <span>32</span>
+                            </div>
+                            <div class="feed-action">
+                                <span>⭐</span>
+                                <span>收藏</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 动态项 3 -->
+                    <div class="feed-item">
+                        <div class="feed-header">
+                            <div class="feed-avatar">
+                                <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=official%20game%20account&image_size=square" alt="官方账号头像">
+                            </div>
+                            <div class="feed-user-info">
+                                <div class="feed-username">星际战场官方</div>
+                                <div class="feed-time">6小时前</div>
+                            </div>
+                        </div>
+                        <div class="feed-content">
+                            【官方公告】《星际战场》将于本周四进行版本更新，新增地图和武器，敬请期待！
+                        </div>
+                        <div class="feed-actions">
+                            <div class="feed-action">
+                                <span>👍</span>
+                                <span>512</span>
+                            </div>
+                            <div class="feed-action">
+                                <span>💬</span>
+                                <span>128</span>
+                            </div>
+                            <div class="feed-action">
+                                <span>🔄</span>
+                                <span>64</span>
+                            </div>
+                            <div class="feed-action">
+                                <span>⭐</span>
+                                <span>收藏</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 动态项 4 -->
+                    <div class="feed-item">
+                        <div class="feed-header">
+                            <div class="feed-avatar">
+                                <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=user%20avatar%203&image_size=square" alt="用户头像">
+                            </div>
+                            <div class="feed-user-info">
+                                <div class="feed-username">策略大师</div>
+                                <div class="feed-time">8小时前</div>
+                            </div>
+                        </div>
+                        <div class="feed-content">
+                            分享一个《帝国崛起》的速通技巧，使用这个策略可以在30分钟内完成游戏！
+                        </div>
+                        <div class="feed-actions">
+                            <div class="feed-action">
+                                <span>👍</span>
+                                <span>192</span>
+                            </div>
+                            <div class="feed-action">
+                                <span>💬</span>
+                                <span>48</span>
+                            </div>
+                            <div class="feed-action">
+                                <span>🔄</span>
+                                <span>24</span>
+                            </div>
+                            <div class="feed-action">
+                                <span>⭐</span>
+                                <span>收藏</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 右侧功能面板 -->
+                <div class="sidebar">
+                    <!-- 热门话题 -->
+                    <div class="sidebar-card">
+                        <h3>热门话题</h3>
+                        <ul class="trending-topics">
+                            <li class="topic-item">
+                                <span class="topic-name">#奇幻冒险世界最终boss</span>
+                                <span class="topic-count">1.2万</span>
+                            </li>
+                            <li class="topic-item">
+                                <span class="topic-name">#星际战场新版本</span>
+                                <span class="topic-count">8.7千</span>
+                            </li>
+                            <li class="topic-item">
+                                <span class="topic-name">#二次元冒险新角色</span>
+                                <span class="topic-count">1.5万</span>
+                            </li>
+                            <li class="topic-item">
+                                <span class="topic-name">#帝国崛起速通技巧</span>
+                                <span class="topic-count">5.4千</span>
+                            </li>
+                            <li class="topic-item">
+                                <span class="topic-name">#游戏推荐</span>
+                                <span class="topic-count">2.3万</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- 推荐关注 -->
+                    <div class="sidebar-card">
+                        <h3>推荐关注</h3>
+                        <div class="recommended-users">
+                            <div class="user-item">
+                                <div class="user-item-avatar">
+                                    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=game%20kol%201&image_size=square" alt="用户头像">
+                                </div>
+                                <div class="user-item-info">
+                                    <div class="user-item-name">游戏主播</div>
+                                    <div class="user-item-desc">游戏主播，专注FPS游戏</div>
+                                </div>
+                                <button class="follow-btn">关注</button>
+                            </div>
+                            <div class="user-item">
+                                <div class="user-item-avatar">
+                                    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=game%20developer%20account&image_size=square" alt="用户头像">
+                                </div>
+                                <div class="user-item-info">
+                                    <div class="user-item-name">奇幻游戏工作室</div>
+                                    <div class="user-item-desc">《奇幻冒险世界》开发商</div>
+                                </div>
+                                <button class="follow-btn">关注</button>
+                            </div>
+                            <div class="user-item">
+                                <div class="user-item-avatar">
+                                    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=content%20creator&image_size=square" alt="用户头像">
+                                </div>
+                                <div class="user-item-info">
+                                    <div class="user-item-name">攻略达人</div>
+                                    <div class="user-item-desc">游戏攻略创作者</div>
+                                </div>
+                                <button class="follow-btn">关注</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 正在直播 -->
+                    <div class="sidebar-card">
+                        <h3>正在直播</h3>
+                        <div class="live-preview">
+                            <div class="live-preview-item">
+                                <div class="live-preview-cover">
+                                    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=game%20live%20stream%201&image_size=landscape_16_9" alt="直播封面">
+                                    <div class="live-preview-badge">直播中</div>
+                                </div>
+                                <div class="live-preview-info">
+                                    <div class="live-preview-title">奇幻冒险世界速通挑战</div>
+                                    <div class="live-preview-meta">主播名称 · 1.2万观看</div>
+                                </div>
+                            </div>
+                            <div class="live-preview-item">
+                                <div class="live-preview-cover">
+                                    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=game%20live%20stream%202&image_size=landscape_16_9" alt="直播封面">
+                                    <div class="live-preview-badge">直播中</div>
+                                </div>
+                                <div class="live-preview-info">
+                                    <div class="live-preview-title">星际战场排位赛</div>
+                                    <div class="live-preview-meta">主播名称 · 8.7千观看</div>
+                                </div>
+                            </div>
+                            <div class="live-preview-item">
+                                <div class="live-preview-cover">
+                                    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=game%20live%20stream%203&image_size=landscape_16_9" alt="直播封面">
+                                    <div class="live-preview-badge">直播中</div>
+                                </div>
+                                <div class="live-preview-info">
+                                    <div class="live-preview-title">二次元冒险抽卡</div>
+                                    <div class="live-preview-meta">主播名称 · 1.5万观看</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 底部导航区 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-links">
+                <div class="link-group">
+                    <h4>平台介绍</h4>
+                    <ul>
+                        <li><a href="#">关于我们</a></li>
+                        <li><a href="#">加入我们</a></li>
+                        <li><a href="#">商务合作</a></li>
+                        <li><a href="#">媒体报道</a></li>
+                    </ul>
+                </div>
+                <div class="link-group">
+                    <h4>帮助中心</h4>
+                    <ul>
+                        <li><a href="#">常见问题</a></li>
+                        <li><a href="#">账号问题</a></li>
+                        <li><a href="#">技术支持</a></li>
+                        <li><a href="#">游戏指南</a></li>
+                    </ul>
+                </div>
+                <div class="link-group">
+                    <h4>开发者</h4>
+                    <ul>
+                        <li><a href="#">开发者平台</a></li>
+                        <li><a href="#">SDK文档</a></li>
+                        <li><a href="#">接入指南</a></li>
+                        <li><a href="#">成功案例</a></li>
+                    </ul>
+                </div>
+                <div class="link-group">
+                    <h4>法律与政策</h4>
+                    <ul>
+                        <li><a href="#">用户协议</a></li>
+                        <li><a href="#">隐私政策</a></li>
+                        <li><a href="#">退款政策</a></li>
+                        <li><a href="#">知识产权</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 WeGame. 保留所有权利。</p>
+                <div class="social-links">
+                    <a href="#">微博</a>
+                    <a href="#">微信</a>
+                    <a href="#">B站</a>
+                    <a href="#">抖音</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 社区标签切换功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const communityTabs = document.querySelectorAll('.community-tab');
+            
+            communityTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // 移除所有标签的active类
+                    communityTabs.forEach(t => t.classList.remove('active'));
+                    // 添加当前标签的active类
+                    this.classList.add('active');
+                    // 实际项目中这里应该根据标签切换内容
+                    console.log('切换到:', this.textContent);
+                });
+            });
+            
+            // 动态项点击事件
+            const feedItems = document.querySelectorAll('.feed-item');
+            feedItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // 实际项目中这里应该跳转到动态详情页
+                    console.log('查看动态详情');
+                });
+            });
+            
+            // 关注按钮点击事件
+            const followButtons = document.querySelectorAll('.follow-btn');
+            followButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    if (this.textContent === '关注') {
+                        this.textContent = '已关注';
+                        this.style.backgroundColor = 'var(--bg-secondary)';
+                        this.style.color = 'var(--text-secondary)';
+                    } else {
+                        this.textContent = '关注';
+                        this.style.backgroundColor = '';
+                        this.style.color = '';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

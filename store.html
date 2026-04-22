@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商店 - WeGame</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+    <style>
+        /* 商店页面特有样式 */
+        .store-header {
+            padding: 40px 0;
+            background-color: var(--bg-secondary);
+            margin-top: 64px;
+        }
+        
+        .store-header h1 {
+            font-size: 32px;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        
+        .store-header p {
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+        
+        /* 分类导航栏 */
+        .category-nav {
+            background-color: var(--card-bg);
+            box-shadow: var(--shadow);
+            margin: 20px 0;
+            border-radius: 8px;
+            padding: 16px 0;
+        }
+        
+        .category-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 0 20px;
+        }
+        
+        .category-tab {
+            padding: 8px 16px;
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            border: none;
+            border-radius: 16px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .category-tab:hover,
+        .category-tab.active {
+            background-color: var(--accent-primary);
+            color: white;
+        }
+        
+        /* 筛选与排序工具条 */
+        .filter-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 30px;
+        }
+        
+        .filter-group {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+        
+        .filter-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        .filter-select {
+            padding: 8px 12px;
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+        }
+        
+        /* 游戏展示网格 */
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 24px;
+        }
+        
+        .store-game-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .store-game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+        
+        .store-game-card:hover .card-overlay {
+            opacity: 1;
+        }
+        
+        .game-cover {
+            position: relative;
+            height: 160px;
+            overflow: hidden;
+        }
+        
+        .game-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .store-game-card:hover .game-cover img {
+            transform: scale(1.05);
+        }
+        
+        .platform-badges {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            display: flex;
+            gap: 4px;
+        }
+        
+        .platform-badge {
+            padding: 2px 6px;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            font-size: 10px;
+            border-radius: 2px;
+        }
+        
+        .card-content {
+            padding: 16px;
+        }
+        
+        .game-title {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+            line-height: 1.3;
+        }
+        
+        .game-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-bottom: 12px;
+        }
+        
+        .game-tag {
+            padding: 2px 8px;
+            background-color: var(--bg-secondary);
+            color: var(--text-secondary);
+            font-size: 10px;
+            border-radius: 10px;
+        }
+        
+        .game-rating {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            gap: 8px;
+        }
+        
+        .rating-stars {
+            color: #ffb800;
+            font-size: 14px;
+        }
+        
+        .rating-count {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        
+        .game-price {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+        
+        .current-price {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ff4d4f;
+        }
+        
+        .original-price {
+            font-size: 14px;
+            color: var(--text-muted);
+            text-decoration: line-through;
+        }
+        
+        .card-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .game-description {
+            color: white;
+            font-size: 14px;
+            margin-bottom: 20px;
+            text-align: center;
+            line-height: 1.4;
+        }
+        
+        .overlay-buttons {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .btn-overlay {
+            padding: 8px 16px;
+            border: 1px solid white;
+            background-color: transparent;
+            color: white;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-overlay:hover {
+            background-color: white;
+            color: var(--text-primary);
+        }
+        
+        .btn-overlay.primary {
+            background-color: var(--accent-primary);
+            border-color: var(--accent-primary);
+        }
+        
+        .btn-overlay.primary:hover {
+            background-color: var(--accent-secondary);
+            border-color: var(--accent-secondary);
+            color: white;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .filter-toolbar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            
+            .filter-group {
+                flex-wrap: wrap;
+            }
+            
+            .game-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 16px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .game-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 12px;
+            }
+            
+            .card-content {
+                padding: 12px;
+            }
+            
+            .game-title {
+                font-size: 14px;
+            }
+            
+            .current-price {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <header class="navbar">
+        <div class="navbar-container">
+            <!-- 左侧Logo和导航 -->
+            <div class="navbar-left">
+                <div class="logo">
+                    <a href="index.html">WEGAME</a>
+                </div>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="index.html">首页</a></li>
+                        <li><a href="store.html" class="active">商店</a></li>
+                        <li><a href="library.html">游戏库</a></li>
+                        <li><a href="live.html">直播</a></li>
+                        <li><a href="community.html">社区</a></li>
+                        <li><a href="#ranking">排行榜</a></li>
+                    </ul>
+                </nav>
+            </div>
+            
+            <!-- 中部搜索框 -->
+            <div class="navbar-center">
+                <div class="search-box">
+                    <input type="text" placeholder="搜索游戏、玩家、社区话题">
+                    <button class="search-btn">搜索</button>
+                </div>
+            </div>
+            
+            <!-- 右侧用户功能 -->
+            <div class="navbar-right">
+                <div class="nav-icon">
+                    <span class="icon notification">🔔</span>
+                </div>
+                <div class="nav-icon">
+                    <span class="icon friends">👥</span>
+                </div>
+                <div class="user-profile">
+                    <div class="user-avatar">
+                        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=user%20avatar%20profile%20picture&image_size=square" alt="用户头像">
+                    </div>
+                    <div class="user-dropdown">
+                        <ul>
+                            <li><a href="#profile">个人主页</a></li>
+                            <li><a href="#assets">我的资产</a></li>
+                            <li><a href="#settings">系统设置</a></li>
+                            <li>
+                                <div class="theme-toggle">
+                                    <span>深色模式</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="theme-toggle">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </li>
+                            <li><a href="#logout">退出登录</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 商店页面头部 -->
+    <section class="store-header">
+        <div class="container">
+            <h1>游戏商店</h1>
+            <p>发现并购买最新、最热门的游戏</p>
+        </div>
+    </section>
+
+    <!-- 主内容区 -->
+    <main>
+        <div class="container">
+            <!-- 分类导航栏 -->
+            <div class="category-nav">
+                <div class="category-tabs">
+                    <button class="category-tab active">全部游戏</button>
+                    <button class="category-tab">大型网游</button>
+                    <button class="category-tab">单机</button>
+                    <button class="category-tab">动作RPG</button>
+                    <button class="category-tab">冒险RPG</button>
+                    <button class="category-tab">MMORPG</button>
+                    <button class="category-tab">FPS</button>
+                    <button class="category-tab">二次元</button>
+                    <button class="category-tab">端手互通</button>
+                    <button class="category-tab">云游戏</button>
+                    <button class="category-tab">免下载秒玩</button>
+                    <button class="category-tab">先锋测试</button>
+                </div>
+            </div>
+
+            <!-- 筛选与排序工具条 -->
+            <div class="filter-toolbar">
+                <div class="filter-group">
+                    <span class="filter-label">价格区间：</span>
+                    <select class="filter-select">
+                        <option value="all">全部价格</option>
+                        <option value="free">免费</option>
+                        <option value="0-99">¥0-99</option>
+                        <option value="100-199">¥100-199</option>
+                        <option value="200-299">¥200-299</option>
+                        <option value="300+">¥300+</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <span class="filter-label">评分：</span>
+                    <select class="filter-select">
+                        <option value="all">全部评分</option>
+                        <option value="4+">4分以上</option>
+                        <option value="3+">3分以上</option>
+                        <option value="2+">2分以上</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <span class="filter-label">发行日期：</span>
+                    <select class="filter-select">
+                        <option value="all">全部时间</option>
+                        <option value="7days">最近7天</option>
+                        <option value="30days">最近30天</option>
+                        <option value="90days">最近90天</option>
+                        <option value="1year">最近1年</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <span class="filter-label">排序方式：</span>
+                    <select class="filter-select">
+                        <option value="popular">热门度</option>
+                        <option value="newest">上架时间</option>
+                        <option value="sales">销量</option>
+                        <option value="price-asc">价格从低到高</option>
+                        <option value="price-desc">价格从高到低</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 游戏展示网格 -->
+            <div class="game-grid">
+                <!-- 游戏卡片 1 -->
+                <div class="store-game-card">
+                    <div class="game-cover">
+                        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=game%20cover%20action%20rpg&image_size=landscape_4_3" alt="游戏封面">
+                        <div class="platform-badges">
+                            <span class="platform-badge">PC</span>
+                            <span class="platform-badge">Mac</span>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="game-title">奇幻冒险世界</h3>
+                        <div class="game-tags">
+                            <span class="game-tag">动作RPG</span>
+                            <span class="game-tag">开放世界</span>
+                        </div>
+                        <div class="game-rating">
+                            <div class="rating-stars">★★★★☆</div>
+                            <span class="rating-count">12,345</span>
+                        </div>
+                        <div class="game-price">
+                            <span class="current-price">¥199</span>
+                            <span class="original-price">¥299</span>
+                        </div>
+                    </div>
+                    <div class="card-overlay">
+                        <p class="game-description">一款开放世界动作RPG游戏，玩家将在奇幻世界中展开冒险，探索未知的领域，与各种敌人战斗。</p>
+                        <div class="overlay-buttons">
+                            <button class="btn-overlay primary">立即购买</button>
+                            <button class="btn-overlay">添加到愿望单</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 游戏卡片 2 -->
+                <div class="store-game-card">
+                    <div class="game-cover">
+                        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=game%20cover%20fps%20shooter&image_size=landscape_4_3" alt="游戏封面">
+                        <div class="platform-badges">
+                            <span class="platform-badge">PC</span>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="game-title">星际战场</h3>
+                        <div class="game-tags">
+                            <span class="game-tag">FPS</span>
+                            <span class="game-tag">多人在线</span>
+                        </div>
+                        <div class="game-rating">
+                            <div class="rating-stars">★★★★★</div>
+                            <span class="rating-count">23,456</span>
+                        </div>
+                        <div class="game-price">
+                            <span class="current-price">¥149</span>
+                            <span class="original-price">¥199</span>
+                        </div>
+                    </div>
+                    <div class="card-overlay">
+                        <p class="game-description">一款科幻题材的第一人称射击游戏，支持多人在线对战，拥有丰富的武器和地图。</p>
+                        <div class="overlay-buttons">
+                            <button class="btn-overlay primary">立即购买</button>
+                            <button class="btn-overlay">添加到愿望单</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 游戏卡片 3 -->
+                <div class="store-game-card">
+                    <div class="game-cover">
+                        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=game%20cover%20mmorpg&image_size=landscape_4_3" alt="游戏封面">
+                        <div class="platform-badges">
+                            <span class="platform-badge">PC</span>
+                            <span class="platform-badge">云游戏</span>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="game-title">神话纪元</h3>
+                        <div class="game-tags">
+                            <span class="game-tag">MMORPG</span>
+                            <span class="game-tag">奇幻</span>
+                        </div>
+                        <div class="game-rating">
+                            <div class="rating-stars">★★★★☆</div>
+                            <span class="rating-count">18,765</span>
+                        </div>
+                        <div class="game-price">
+                            <span class="current-price">¥299</span>
+                        </div>
+                    </div>
+                    <div class="card-overlay">
+                        <p class="game-description">一款大型多人在线角色扮演游戏，玩家可以创建自己的角色，加入公会，参与各种副本和活动。</p>
+                        <div class="overlay-buttons">
+                            <button class="btn-overlay primary">立即购买</button>
+                            <button class="btn-overlay">添加到愿望单</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 游戏卡片 4 -->
+                <div class="store-game-card">
+                    <div class="game-cover">
+                        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=game%20cover%20anime%20style&image_size=landscape_4_3" alt="游戏封面">
+                        <div class="platform-badges">
+                            <span class="platform-badge">PC</span>
+                            <span class="platform-badge">端手互通</span>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="game-title">二次元冒险</h3>
+                        <div class="game-tags">
+                            <span class="game-tag">二次元</span>
+                            <span class="game-tag">冒险</span>
+                        </div>
+                        <div class="game-rating">
+                            <div class="rating-stars">★★★★★</div>
+                            <span class="rating-count">34,567</span>
+                        </div>
+                        <div class="game-price">
+                            <span class="current-price">¥129</span>
+                            <span class="original-price">¥199</span>
+                        </div>
+                    </div>
+                    <div class="card-overlay">
+                        <p class="game-description">一款二次元风格的冒险游戏，拥有精美的画面和丰富的剧情，支持多平台互通。</p>
+                        <div class="overlay-buttons">
+                            <button class="btn-overlay primary">立即购买</button>
+                            <button class="btn-overlay">添加到愿望单</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 游戏卡片 5 -->
+                <div class="store-game-card">
+                    <div class="game-cover">
+                        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=game%20cover%20strategy&image_size=landscape_4_3" alt="游戏封面">
+                        <div class="platform-badges">
+                            <span class="platform-badge">PC</span>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="game-title">帝国崛起</h3>
+                        <div class="game-tags">
+                            <span class="game-tag">策略</span>
+                            <span class="game-tag">单机</span>
+                        </div>
+                        <div class="game-rating">
+                            <div class="rating-stars">★★★★☆</div>
+                            <span class="rating-count">9,876</span>
+                        </div>
+                        <div class="game-price">
+                            <span class="current-price">¥159</span>
+                        </div>
+                    </div>
+                    <div class="card-overlay">
+                        <p class="game-description">一款历史题材的策略游戏，玩家需要建设自己的帝国，发展经济，组建军队，征服其他国家。</p>
+                        <div class="overlay-buttons">
+                            <button class="btn-overlay primary">立即购买</button>
+                            <button class="btn-overlay">添加到愿望单</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 游戏卡片 6 -->
+                <div class="store-game-card">
+                    <div class="game-cover">
+                        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=game%20cover%20adventure&image_size=landscape_4_3" alt="游戏封面">
+                        <div class="platform-badges">
+                            <span class="platform-badge">PC</span>
+                            <span class="platform-badge">Mac</span>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="game-title">迷失森林</h3>
+                        <div class="game-tags">
+                            <span class="game-tag">冒险</span>
+                            <span class="game-tag">生存</span>
+                        </div>
+                        <div class="game-rating">
+                            <div class="rating-stars">★★★★☆</div>
+                            <span class="rating-count">15,678</span>
+                        </div>
+                        <div class="game-price">
+                            <span class="current-price">¥89</span>
+                            <span class="original-price">¥129</span>
+                        </div>
+                    </div>
+                    <div class="card-overlay">
+                        <p class="game-description">一款开放世界生存冒险游戏，玩家需要在森林中收集资源，建造庇护所，对抗野生动物和其他威胁。</p>
+                        <div class="overlay-buttons">
+                            <button class="btn-overlay primary">立即购买</button>
+                            <button class="btn-overlay">添加到愿望单</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 游戏卡片 7 -->
+                <div class="store-game-card">
+                    <div class="game-cover">
+                        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=game%20cover%20racing&image_size=landscape_4_3" alt="游戏封面">
+                        <div class="platform-badges">
+                            <span class="platform-badge">PC</span>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="game-title">极速狂飙</h3>
+                        <div class="game-tags">
+                            <span class="game-tag">竞速</span>
+                            <span class="game-tag">多人</span>
+                        </div>
+                        <div class="game-rating">
+                            <div class="rating-stars">★★★★☆</div>
+                            <span class="rating-count">11,234</span>
+                        </div>
+                        <div class="game-price">
+                            <span class="current-price">¥179</span>
+                        </div>
+                    </div>
+                    <div class="card-overlay">
+                        <p class="game-description">一款逼真的赛车游戏，拥有多种车型和赛道，支持在线多人对战，体验极速狂飙的快感。</p>
+                        <div class="overlay-buttons">
+                            <button class="btn-overlay primary">立即购买</button>
+                            <button class="btn-overlay">添加到愿望单</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 游戏卡片 8 -->
+                <div class="store-game-card">
+                    <div class="game-cover">
+                        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=game%20cover%20puzzle&image_size=landscape_4_3" alt="游戏封面">
+                        <div class="platform-badges">
+                            <span class="platform-badge">PC</span>
+                            <span class="platform-badge">云游戏</span>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="game-title">智力挑战</h3>
+                        <div class="game-tags">
+                            <span class="game-tag"> puzzle</span>
+                            <span class="game-tag">休闲</span>
+                        </div>
+                        <div class="game-rating">
+                            <div class="rating-stars">★★★★★</div>
+                            <span class="rating-count">7,654</span>
+                        </div>
+                        <div class="game-price">
+                            <span class="current-price">¥59</span>
+                        </div>
+                    </div>
+                    <div class="card-overlay">
+                        <p class="game-description">一款益智解谜游戏，包含多种类型的谜题，挑战玩家的智力和思维能力。</p>
+                        <div class="overlay-buttons">
+                            <button class="btn-overlay primary">立即购买</button>
+                            <button class="btn-overlay">添加到愿望单</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 底部导航区 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-links">
+                <div class="link-group">
+                    <h4>平台介绍</h4>
+                    <ul>
+                        <li><a href="#">关于我们</a></li>
+                        <li><a href="#">加入我们</a></li>
+                        <li><a href="#">商务合作</a></li>
+                        <li><a href="#">媒体报道</a></li>
+                    </ul>
+                </div>
+                <div class="link-group">
+                    <h4>帮助中心</h4>
+                    <ul>
+                        <li><a href="#">常见问题</a></li>
+                        <li><a href="#">账号问题</a></li>
+                        <li><a href="#">技术支持</a></li>
+                        <li><a href="#">游戏指南</a></li>
+                    </ul>
+                </div>
+                <div class="link-group">
+                    <h4>开发者</h4>
+                    <ul>
+                        <li><a href="#">开发者平台</a></li>
+                        <li><a href="#">SDK文档</a></li>
+                        <li><a href="#">接入指南</a></li>
+                        <li><a href="#">成功案例</a></li>
+                    </ul>
+                </div>
+                <div class="link-group">
+                    <h4>法律与政策</h4>
+                    <ul>
+                        <li><a href="#">用户协议</a></li>
+                        <li><a href="#">隐私政策</a></li>
+                        <li><a href="#">退款政策</a></li>
+                        <li><a href="#">知识产权</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 WeGame. 保留所有权利。</p>
+                <div class="social-links">
+                    <a href="#">微博</a>
+                    <a href="#">微信</a>
+                    <a href="#">B站</a>
+                    <a href="#">抖音</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 分类标签点击事件
+        document.addEventListener('DOMContentLoaded', function() {
+            const categoryTabs = document.querySelectorAll('.category-tab');
+            
+            categoryTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // 移除所有标签的active类
+                    categoryTabs.forEach(t => t.classList.remove('active'));
+                    // 添加当前标签的active类
+                    this.classList.add('active');
+                    // 实际项目中这里应该根据分类筛选游戏
+                    console.log('选择分类:', this.textContent);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
